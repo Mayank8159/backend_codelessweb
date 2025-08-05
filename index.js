@@ -15,7 +15,7 @@ const startServer = async () => {
 
     // ✅ Use CORS with restricted origins
     app.use(cors({
-      origin: ['http://localhost:5173', 'https://codelessweb.io/'], // Adjust as needed
+      origin: ['http://localhost:5173', 'https://codelessweb.io'], // Adjust as needed
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true,
     }));
