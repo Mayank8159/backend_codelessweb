@@ -14,20 +14,25 @@ const startServer = async () => {
     await connectDB();
 
     // ✅ Use CORS with restricted origins
-   const allowedOrigins = ['http://localhost:5173', 'https://codelessweb.io'];
+    const allowedOrigins = ['http://localhost:5173', 'https://codelessweb.io'];
 
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
-}));
+    const corsOptions = {
+      origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error('Not allowed by CORS'));
+        }
+      },
+      methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+      allowedHeaders: ['Content-Type', 'Authorization'],
+      credentials: true,
+    };
+
+    app.use(cors(corsOptions));
+
+    // ✅ Handle preflight requests
+    app.options('*', cors(corsOptions));
 
     // ✅ Use built-in JSON parser
     app.use(express.json());
