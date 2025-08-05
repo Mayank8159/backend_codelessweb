@@ -4,14 +4,14 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const emailRoutes = require('./routes/emailRoutes');
 
-dotenv.config({ override: true }); // ✅ Avoid duplicate .env injection
+dotenv.config({ override: true }); // Prevent duplicate .env injection
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
-    await connectDB(); // ✅ MongoDB connection without deprecated options
+    await connectDB(); // MongoDB connection
 
     // ✅ Define allowed origins
     const allowedOrigins = ['http://localhost:5173', 'https://codelessweb.io'];
@@ -29,9 +29,24 @@ const startServer = async () => {
       credentials: true,
     };
 
+    // ✅ Log incoming origin for debugging
+    app.use((req, res, next) => {
+      console.log('🔍 Incoming Origin:', req.headers.origin);
+      next();
+    });
+
     // ✅ Apply CORS middleware
     app.use(cors(corsOptions));
-    app.options('*', cors(corsOptions)); // ✅ Handle preflight requests
+    app.options('*', cors(corsOptions)); // Handle preflight requests
+
+    // ✅ Fallback headers for Render (optional, for debugging)
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      next();
+    });
 
     // ✅ Parse JSON bodies
     app.use(express.json());
