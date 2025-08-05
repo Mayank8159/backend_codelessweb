@@ -4,16 +4,16 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const emailRoutes = require('./routes/emailRoutes');
 
-dotenv.config();
+dotenv.config({ override: true }); // ✅ Avoid duplicate .env injection
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ Connect to MongoDB with error handling
 const startServer = async () => {
   try {
-    await connectDB();
+    await connectDB(); // ✅ MongoDB connection without deprecated options
 
-    // ✅ Use CORS with restricted origins
+    // ✅ Define allowed origins
     const allowedOrigins = ['http://localhost:5173', 'https://codelessweb.io'];
 
     const corsOptions = {
@@ -29,15 +29,14 @@ const startServer = async () => {
       credentials: true,
     };
 
+    // ✅ Apply CORS middleware
     app.use(cors(corsOptions));
+    app.options('*', cors(corsOptions)); // ✅ Handle preflight requests
 
-    // ✅ Handle preflight requests
-    app.options('*', cors(corsOptions));
-
-    // ✅ Use built-in JSON parser
+    // ✅ Parse JSON bodies
     app.use(express.json());
 
-    // ✅ Health check route
+    // ✅ Health check
     app.get('/', (req, res) => {
       res.send('API is running');
     });
