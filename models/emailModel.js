@@ -8,6 +8,6 @@ const emailSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
-}, { timestamps: true });
+}, { timestamps: { type: Date, default: Date.now } });
 
 module.exports = mongoose.model('Email', emailSchema);
