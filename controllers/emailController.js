@@ -25,7 +25,7 @@ exports.storeEmail = async (req, res) => {
   }
 };
 
-export const getAllEmails = async (req, res) => {
+exports.getAllEmails = async (req, res) => {
   try {
     const emails = await Email.find().sort({ timestamp: -1 });
     res.status(200).json(emails);
