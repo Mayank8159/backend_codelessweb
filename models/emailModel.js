@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
 
-const emailSchema = new mongoose.Schema({
-  address: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
+const emailSchema = new mongoose.Schema(
+  {
+    address: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
   },
-}, { timestamps: { type: Date, default: Date.now } });
+  {
+    timestamps: true, // Automatically adds createdAt and updatedAt
+  }
+);
 
 module.exports = mongoose.model('Email', emailSchema);
